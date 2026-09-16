@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ 판타지 소설 주제 생성기 ✨</title>
+    <title>✨ 판타지 주제 생성기 ✨</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,7 +13,7 @@
         }
 
         body {
-            background: linear-gradient(135deg, #0f0c20, #150e28, #281537);
+            background: radial-gradient(circle at center, #1b1035, #080417);
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -23,96 +23,105 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 215, 0, 0.25);
+            border-radius: 24px;
             padding: 40px 30px;
-            max-width: 600px;
+            max-width: 500px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 15px rgba(186, 85, 211, 0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(138, 43, 226, 0.25);
         }
 
         h1 {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #ffd700;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
-            margin-bottom: 10px;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
+            margin-bottom: 8px;
         }
 
         p.subtitle {
             font-size: 0.95rem;
-            color: #b3a2c7;
-            margin-bottom: 30px;
+            color: #a491c3;
+            margin-bottom: 35px;
         }
 
-        .card-container {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px dashed #9370db;
-            border-radius: 15px;
-            padding: 25px 20px;
+        /* 중앙 명사 키워드 카드 */
+        .keyword-card {
+            background: radial-gradient(circle at center, rgba(147, 112, 219, 0.15), rgba(0, 0, 0, 0.5));
+            border: 2px solid #9370db;
+            border-radius: 20px;
+            padding: 40px 20px;
             margin-bottom: 30px;
-            min-height: 220px;
+            min-height: 180px;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 12px;
-            transition: all 0.3s ease;
+            align-items: center;
+            box-shadow: inset 0 0 20px rgba(147, 112, 219, 0.3);
+            position: relative;
+            overflow: hidden;
         }
 
-        .keyword-item {
-            font-size: 1.1rem;
-            line-height: 1.5;
-            color: #e6e6fa;
-            opacity: 0;
-            transform: translateY(10px);
-            animation: fadeInUp 0.4s forwards;
-        }
-
-        .keyword-item span.highlight {
+        .keyword-word {
+            font-size: 3rem;
+            font-weight: 800;
             color: #00ffff;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(0, 255, 255, 0.5);
+            text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 10px rgba(255, 255, 255, 0.5);
+            letter-spacing: 2px;
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
 
-        .keyword-item span.highlight-gold {
-            color: #ffd700;
-            font-weight: bold;
-            text-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+        .keyword-word.pop {
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes fadeInUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
             }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .category-tag {
+            font-size: 0.85rem;
+            color: #ffd700;
+            background: rgba(255, 215, 0, 0.15);
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            padding: 4px 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
         }
 
         .btn-group {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             justify-content: center;
-            flex-wrap: wrap;
         }
 
         button {
-            background: linear-gradient(45deg, #8a2be2, #4b0082);
+            background: linear-gradient(135deg, #8a2be2, #4b0082);
             color: #fff;
             border: none;
-            padding: 15px 30px;
+            padding: 16px 32px;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 30px;
             cursor: pointer;
-            box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+            transition: all 0.2s ease;
+            flex: 1;
         }
 
         button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(138, 43, 226, 0.6);
-            background: linear-gradient(45deg, #9932cc, #6a0ded);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.7);
+            background: linear-gradient(135deg, #9932cc, #6a0ded);
         }
 
         button:active {
@@ -120,17 +129,17 @@
         }
 
         button.copy-btn {
-            background: rgba(255, 255, 255, 0.1);
+            flex: 0 0 auto;
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid #9370db;
             box-shadow: none;
+            padding: 16px 20px;
         }
 
         button.copy-btn:hover {
             background: rgba(147, 112, 219, 0.3);
-            box-shadow: 0 5px 15px rgba(147, 112, 219, 0.2);
         }
 
-        /* toast 메시지 스타일 */
         .toast {
             position: fixed;
             bottom: 30px;
@@ -138,7 +147,7 @@
             transform: translateX(-50%);
             background-color: #ffd700;
             color: #000;
-            padding: 10px 20px;
+            padding: 10px 24px;
             border-radius: 20px;
             font-weight: bold;
             opacity: 0;
@@ -154,91 +163,96 @@
 <body>
 
     <div class="container">
-        <h1>🗡️ 판타지 주제 생성기 🔮</h1>
-        <p class="subtitle">버튼을 눌러 나만의 흥미진진한 판타지 웹소설 주제를 뽑아보세요!</p>
+        <h1>🔮 판타지 명사 주제 생성기 🔮</h1>
+        <p class="subtitle">소설의 중심 테마가 될 영감의 단어를 뽑아보세요!</p>
 
-        <div class="card-container" id="result-box">
-            <p style="color: #888;">주제 생성 버튼을 누르면 새로운 소재가 조합됩니다!</p>
+        <div class="keyword-card">
+            <span class="category-tag" id="category">카테고리</span>
+            <div class="keyword-word" id="word">단어</div>
         </div>
 
         <div class="btn-group">
-            <button onclick="generateTopic()">🎲 주제 뽑기</button>
-            <button class="copy-btn" onclick="copyResult()">📋 결과 복사</button>
+            <button onclick="generateNoun()">🎲 명사 주제 뽑기</button>
+            <button class="copy-btn" onclick="copyResult()">📋 복사</button>
         </div>
     </div>
 
-    <div id="toast" class="toast">클립보드에 복사되었습니다!</div>
+    <div id="toast" class="toast">단어가 복사되었습니다!</div>
 
     <script>
-        // 키워드 데이터베이스 (원하는 단어를 자유롭게 추가/수정 가능)
-        const backgrounds = [
-            "멸망 직전의 마법 아카데미", "신들이 버린 지하 던전", "스팀펑크풍의 제국 수도",
-            "무한히 확장하는 이세계 탑", "마왕이 통치하는 평화로운 정글", "차원 이동자들의 은신처",
-            "드래곤이 경영하는 금륭 중심 도시", "심해 속에 숨겨진 고대 제국"
+        // 판타지 소설 주제용 명사 데이터베이스 (필요 시 자유롭게 단어 추가 가능)
+        const nounDatabase = [
+            // [자연/우주]
+            { category: "자연/우주", word: "별" },
+            { category: "자연/우주", word: "자연" },
+            { category: "자연/우주", word: "심해" },
+            { category: "자연/우주", word: "달" },
+            { category: "자연/우주", word: "폭풍" },
+            { category: "자연/우주", word: "서리" },
+            { category: "자연/우주", word: "유성" },
+            { category: "자연/우주", word: "오로라" },
+            { category: "자연/우주", word: "심연" },
+
+            // [물건/신비]
+            { category: "사물/신비", word: "시계" },
+            { category: "사물/신비", word: "거울" },
+            { category: "사물/신비", word: "열쇠" },
+            { category: "사물/신비", word: "가면" },
+            { category: "사물/신비", word: "나침반" },
+            { category: "사물/신비", word: "그림자" },
+            { category: "사물/신비", word: "인형" },
+            { category: "사물/신비", word: "유리병" },
+            { category: "사물/신비", word: "초상화" },
+
+            // [개념/추상]
+            { category: "개념/추상", word: "기억" },
+            { category: "개념/추상", word: "운명" },
+            { category: "개념/추상", word: "꿈" },
+            { category: "개념/추상", word: "시간" },
+            { category: "개념/추상", word: "시작" },
+            { category: "개념/추상", word: "영혼" },
+            { category: "개념/추상", word: "맹세" },
+            { category: "개념/추상", word: "금기" },
+            { category: "개념/추상", word: "환상" },
+
+            // [장소/세계]
+            { category: "장소/세계", word: "미궁" },
+            { category: "장소/세계", word: "탑" },
+            { category: "장소/세계", word: "방주" },
+            { category: "장소/세계", word: "경계" },
+            { category: "장소/세계", word: "낙원" },
+            { category: "장소/세계", word: "폐허" },
+            { category: "장소/세계", word: "도서관" },
+            { category: "장소/세계", word: "은신처" }
         ];
 
-        const identities = [
-            "시한부 삶을 사는 시골 영지 악역 도련님", "기억을 잃은 최강의 네크로맨서", "퇴사하고 싶은 9급 행정직 마법사",
-            "F급 능력자로 판명된 전설의 성기사", "괴물들의 언어를 알아듣는 요리사", "버려진 황자 출신의 만능 연금술사",
-            "빙의당해 몬스터 보스가 된 평범한 고등학생", "전설의 검에 깃든 츤데레 정령"
-        ];
+        let currentWord = "";
 
-        const itemsOrElements = [
-            "미래의 소설책을 읽는 능력", "죽을 때마다 24시간 전으로 회귀하는 시계", "모든 법칙을 무시하는 절대 무적의 프라이팬",
-            "몬스터를 길들이는 감정 조절 향수", "타인의 능력치를 사서 모으는 시스템 창", "소원을 들어주지만 거짓말만 하는 고양이",
-            "상대방의 마음을 읽는 은빛 가면"
-        ];
+        function generateNoun() {
+            const randomIndex = Math.floor(Math.random() * nounDatabase.length);
+            const selected = nounDatabase[randomIndex];
 
-        const goals = [
-            "마왕성을 인수합병하여 대기업으로 만들기", "억울한 누명을 벗고 편안한 은퇴 생활 즐기기",
-            "세계를 멸망시키려는 진짜 주인공을 저지하기", "잃어버린 자신의 진짜 몸을 되찾기",
-            "이세계에 최고급 한식당 차리기", "신들의 게임에서 승리해 지구로 돌아가기"
-        ];
+            const categoryEl = document.getElementById('category');
+            const wordEl = document.getElementById('word');
 
-        let currentResultText = "";
+            // 애니메이션 리셋
+            wordEl.classList.remove('pop');
+            void wordEl.offsetWidth; // trigger reflow
 
-        function getRandomElement(array) {
-            return array[Math.floor(Math.random() * array.length)];
-        }
+            // 데이터 적용
+            categoryEl.innerText = selected.category;
+            wordEl.innerText = selected.word;
+            currentWord = selected.word;
 
-        function generateTopic() {
-            const bg = getRandomElement(backgrounds);
-            const identity = getRandomElement(identities);
-            const item = getRandomElement(itemsOrElements);
-            const goal = getRandomElement(goals);
-
-            const resultBox = document.getElementById('result-box');
-            
-            // 결과 생성
-            resultBox.innerHTML = `
-                <div class="keyword-item" style="animation-delay: 0.1s;">
-                    🏰 <strong>배경:</strong> <span class="highlight-gold">${bg}</span>에서
-                </div>
-                <div class="keyword-item" style="animation-delay: 0.2s;">
-                    👤 <strong>주인공:</strong> <span class="highlight">${identity}</span>가
-                </div>
-                <div class="keyword-item" style="animation-delay: 0.3s;">
-                    ✨ <strong>핵심 요소:</strong> <span class="highlight-gold">${item}</span>을(를) 가지고
-                </div>
-                <div class="keyword-item" style="animation-delay: 0.4s;">
-                    🎯 <strong>목표:</strong> <span class="highlight">${goal}</span>!
-                </div>
-            `;
-
-            // 복사용 텍스트 저장
-            currentResultText = `[판타지 주제 조합]\n- 배경: ${bg}\n- 주인공: ${identity}\n- 핵심 요소: ${item}\n- 목표: ${goal}`;
+            // 애니메이션 적용
+            wordEl.classList.add('pop');
         }
 
         function copyResult() {
-            if (!currentResultText) {
-                alert("먼저 주제를 생성해주세요!");
-                return;
-            }
+            if (!currentWord) return;
 
-            navigator.clipboard.writeText(currentResultText).then(() => {
+            navigator.clipboard.writeText(currentWord).then(() => {
                 showToast();
-            }).catch(err => {
-                alert("복사 실패! 다시 시도해주세요.");
             });
         }
 
@@ -247,11 +261,11 @@
             toast.classList.add("show");
             setTimeout(() => {
                 toast.classList.remove("show");
-            }, 2000);
+            }, 1500);
         }
 
-        // 페이지 로드 시 첫 번째 주제 자동 생성
-        window.onload = generateTopic;
+        // 페이지 시작 시 무작위 단어 하나 생성
+        window.onload = generateNoun;
     </script>
 </body>
 </html>
