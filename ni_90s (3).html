@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>약속땃지ni - 90s 버디버디 픽셀 약속 추천 플래너</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google 100% Pixel Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Galmuri11:wght@400;700&family=Galmuri9:wght@400;700&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'win-bg': '#e6d8f5',
+                        'win-blue': '#102a71',
+                        'win-purple': '#8a6bb1',
+                        'buddy-pink': '#ffb3d9',
+                        'buddy-blue': '#a4d8ff',
+                        'buddy-yellow': '#fff199',
+                        'buddy-mint': '#b3f5e6',
+                        'buddy-purple': '#d6b3ff',
+                        'pixel-rage': '#ff3344',
+                    },
+                    fontFamily: {
+                        pixel: ['Galmuri9', 'Galmuri11', 'Silkscreen', 'monospace'],
+                        silk: ['Silkscreen', 'monospace']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Force ALL elements to use Pixel Fonts & Sharp Pixel Rendering */
+        * {
+            font-family: 'Galmuri9', 'Galmuri11', 'Silkscreen', monospace !important;
+            image-rendering: pixelated;
+            font-smooth: never;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: unset;
+        }
+
+        /* Default Theme: Dreamy Lavender */
+        :root {
+            --bg-color: #dcd0eb;
+            --bg-pattern-1: #bba6dd;
+            --window-bg: #f4ecfc;
+            --border-dark: #5e467d;
+            --border-light: #ffffff;
+            --header-gradient-1: #7a54a0;
+            --header-gradient-2: #b182e0;
+            --accent-color: #e6d7f7;
+            --text-color: #2a1b3d;
+        }
+
+        /* Theme Variations */
+        body.theme-pink {
+            --bg-color: #ffd6e8;
+            --bg-pattern-1: #ffb3d4;
+            --window-bg: #fff0f6;
+            --border-dark: #a63a69;
+            --border-light: #ffffff;
+            --header-gradient-1: #d94b88;
+            --header-gradient-2: #ff85b8;
+            --accent-color: #ffc2dc;
+            --text-color: #4a0d29;
+        }
+
+        body.theme-brown {
+            --bg-color: #f3e5d8;
+            --bg-pattern-1: #d2b48c;
+            --window-bg: #fdfaf6;
+            --border-dark: #6e473b;
+            --border-light: #ffffff;
+            --header-gradient-1: #8c533e;
+            --header-gradient-2: #c68b59;
+            --accent-color: #e8d0b5;
+            --text-color: #3b2219;
+        }
+
+        body.theme-mint {
+            --bg-color: #cbf5e6;
+            --bg-pattern-1: #97e8cd;
+            --window-bg: #f0fcf7;
+            --border-dark: #2a7359;
+            --border-light: #ffffff;
+            --header-gradient-1: #38a17d;
+            --header-gradient-2: #6ee7bd;
+            --accent-color: #b2f2dc;
+            --text-color: #0b3829;
+        }
+
+        body.theme-sky {
+            --bg-color: #cce5ff;
+            --bg-pattern-1: #99cbff;
+            --window-bg: #f0f7ff;
+            --border-dark: #265999;
+            --border-light: #ffffff;
+            --header-gradient-1: #3377cc;
+            --header-gradient-2: #70b0ff;
+            --accent-color: #b3d7ff;
+            --text-color: #0d294a;
+        }
+
+        body.theme-yellow {
+            --bg-color: #fff4cc;
+            --bg-pattern-1: #ffe082;
+            --window-bg: #fffdf5;
+            --border-dark: #8c6d1f;
+            --border-light: #ffffff;
+            --header-gradient-1: #d4a017;
+            --header-gradient-2: #ffd54f;
+            --accent-color: #ffe899;
+            --text-color: #423206;
+        }
+
+        body.theme-dark {
+            --bg-color: #1a162b;
+            --bg-pattern-1: #322b52;
+            --window-bg: #2b2447;
+            --border-dark: #0f0c1a;
+            --border-light: #483d73;
+            --header-gradient-1: #4c3285;
+            --header-gradient-2: #7752c9;
+            --accent-color: #3e3363;
+            --text-color: #f0e6ff;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(var(--bg-pattern-1) 15%, transparent 16%),
+                radial-gradient(var(--bg-pattern-1) 15%, transparent 16%);
+            background-size: 16px 16px;
+            background-position: 0 0, 8px 8px;
+            color: var(--text-color);
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="%23ff3388"><rect x="7" y="1" width="2" height="14"/><rect x="1" y="7" width="14" height="2"/><rect x="6" y="6" width="4" height="4" fill="%23ffffff"/></svg>'), auto;
+            transition: background 0.3s ease;
+        }
+
+        /* Scanline Overlay Effect */
+        .scanlines {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%);
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        /* Windows 95 / BuddyBuddy Beveled Box Styling */
+        .pixel-window {
+            background: var(--window-bg);
+            border: 3px solid;
+            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+            box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.25);
+        }
+
+        .pixel-inset {
+            background: #ffffff;
+            border: 2px solid;
+            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+        }
+
+        body.theme-dark .pixel-inset {
+            background: #1e1933;
+            color: #f0e6ff;
+        }
+
+        .pixel-btn {
+            background: var(--accent-color);
+            border: 2px solid;
+            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+            box-shadow: 2px 2px 0px #000;
+            transition: all 0.05s ease;
+            color: var(--text-color);
+        }
+
+        .pixel-btn:active {
+            border-color: var(--border-dark) var(--border-light) var(--border-light) var(--border-dark);
+            transform: translate(1px, 1px);
+            box-shadow: 1px 1px 0px #000;
+        }
+
+        .pixel-titlebar {
+            background: linear-gradient(90deg, var(--header-gradient-1), var(--header-gradient-2));
+            color: white;
+            padding: 4px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* Sparkle Trail Canvas */
+        #sparkleCanvas {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 998;
+        }
+
+        /* Rage Mode Screen Glitch Effect */
+        .rage-mode {
+            animation: pixelShake 0.1s infinite alternate !important;
+            filter: hue-rotate(-50deg) saturate(2.5) contrast(1.3);
+        }
+
+        @keyframes pixelShake {
+            0% { transform: translate(4px, 2px); }
+            50% { transform: translate(-3px, -4px); }
+            100% { transform: translate(2px, -2px); }
+        }
+
+        /* Pixel Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--window-bg);
+            border: 1px solid var(--border-dark);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent-color);
+            border: 2px solid;
+            border-color: var(--border-light) var(--border-dark) var(--border-dark) var(--border-light);
+        }
+    </style>
+</head>
+<body class="min-h-screen relative pb-12 selection:bg-pink-400 selection:text-white">
+
+    <!-- CRT Scanlines Overlay -->
+    <div class="scanlines"></div>
+
+    <!-- Interactive Cursor Sparkle Canvas -->
+    <canvas id="sparkleCanvas"></canvas>
+
+    <!-- Top Pixel Header Bar with Theme Selector -->
+    <div class="w-full bg-[#3d2a54] text-pink-200 text-xs py-1 px-4 border-b-2 border-purple-900 flex flex-wrap justify-between items-center gap-2">
+        <div class="flex items-center gap-2">
+            <span>📟 BuddyBuddy v3.5 - [약속땃지ni PC통신]</span>
+        </div>
+        
+        <!-- Retro Theme Selector -->
+        <div class="flex items-center gap-1.5 bg-black/30 px-2 py-0.5 border border-purple-400/50">
+            <span class="text-[11px] text-yellow-300 font-bold mr-1">🎨 배경 테마:</span>
+            <button onclick="setTheme('lavender')" class="w-4 h-4 rounded-none bg-[#dcd0eb] border border-white hover:scale-110" title="몽환 바이올렛"></button>
+            <button onclick="setTheme('pink')" class="w-4 h-4 rounded-none bg-[#ffd6e8] border border-white hover:scale-110" title="버디버디 핑크"></button>
+            <button onclick="setTheme('brown')" class="w-4 h-4 rounded-none bg-[#f3e5d8] border border-white hover:scale-110" title="싸이월드 도토리"></button>
+            <button onclick="setTheme('mint')" class="w-4 h-4 rounded-none bg-[#cbf5e6] border border-white hover:scale-110" title="Y2K 민트"></button>
+            <button onclick="setTheme('sky')" class="w-4 h-4 rounded-none bg-[#cce5ff] border border-white hover:scale-110" title="윈도우 블루"></button>
+            <button onclick="setTheme('yellow')" class="w-4 h-4 rounded-none bg-[#fff4cc] border border-white hover:scale-110" title="파스텔 옐로우"></button>
+            <button onclick="setTheme('dark')" class="w-4 h-4 rounded-none bg-[#1a162b] border border-white hover:scale-110" title="다크 픽셀"></button>
+        </div>
+
+        <div class="flex gap-3 text-xs">
+            <span class="animate-pulse">● ONLINE</span>
+            <span id="currentTimeDisplay">12:00 PM</span>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-3 pt-4 relative z-10">
+        
+        <!-- Main Application Title Window -->
+        <header class="pixel-window mb-5">
+            <div class="pixel-titlebar">
+                <span class="font-bold tracking-wider text-sm sm:text-base flex items-center gap-2">
+                    <i class="fa-solid fa-hard-drive text-yellow-300"></i>
+                    [약속땃지ni] : 땃쥐가 약속 스케줄을 정해준다쮜><
+                </span>
+                <div class="flex gap-1 text-xs">
+                    <button class="px-1.5 py-0.5 bg-purple-300 text-black border border-white font-bold">_</button>
+                    <button class="px-1.5 py-0.5 bg-purple-300 text-black border border-white font-bold">□</button>
+                    <button class="px-1.5 py-0.5 bg-pink-400 text-white border border-white font-bold">✕</button>
+                </div>
+            </div>
+            
+            <div class="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-14 h-14 bg-pink-200 border-2 border-purple-800 flex items-center justify-center text-3xl shadow-inner select-none shrink-0">
+                        ₍ᐢ. ̫ .ᐢ₎
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-bold font-pixel">
+                            ★ 땃지니 버디버디 약속 플래너 ★
+                        </h1>
+                        <p class="text-xs sm:text-sm opacity-90 mt-0.5">
+                            "몇 명이든 덤벼라쮜! 최적 중간지점 & 1시간 알짜배기 코스를 바로 뽑아준다쮜!"
+                        </p>
+                    </div>
+                </div>
+                <div class="pixel-inset p-2 text-xs text-right min-w-[160px]">
+                    <div>상태: <span class="text-green-600 font-bold">친구 대기중</span></div>
+                    <div>접속 서버: <span class="text-blue-600">싸이월드 2호선</span></div>
+                </div>
+            </div>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+            
+            <!-- Left Column: Buddy List / Participant Inputs -->
+            <section class="lg:col-span-5 flex flex-col gap-4">
+                
+                <!-- Buddy Buddy List Window -->
+                <div class="pixel-window">
+                    <div class="pixel-titlebar">
+                        <span class="text-xs font-bold"><i class="fa-solid fa-users text-pink-300 mr-1"></i> 약속 친구 목록 (버디 추가)</span>
+                        <button type="button" onclick="addParticipant()" class="pixel-btn text-xs px-2 py-0.5 bg-pink-300 font-bold text-purple-950">
+                            + 친구 추가
+                        </button>
+                    </div>
+
+                    <div class="p-3">
+                        <form id="promiseForm" onsubmit="generateInitialSchedule(event)" class="space-y-3 text-xs">
+                            
+                            <!-- Dynamic Participant Cards Container -->
+                            <div id="participantsContainer" class="space-y-2.5 max-h-[300px] overflow-y-auto pr-1">
+                                <!-- Cards injected via JS -->
+                            </div>
+
+                            <!-- Meeting Settings Inset -->
+                            <div class="pixel-inset p-3 space-y-2.5">
+                                <div>
+                                    <label class="block font-bold mb-1">
+                                        📍 어디서 만날까? (만남 장소 / 미정이면 자동계산)
+                                    </label>
+                                    <input type="text" id="targetLocation" placeholder="예: 미정, 강남역, 홍대, 성수동..." 
+                                        class="w-full px-2 py-1.5 border-2 border-purple-400 text-xs focus:outline-none focus:bg-yellow-50 text-black">
+                                </div>
+
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div>
+                                        <label class="block font-bold mb-1">⏰ 놀 시간</label>
+                                        <select id="freeTimeSelect" class="w-full px-1.5 py-1.5 border-2 border-purple-400 text-xs bg-white text-black">
+                                            <option value="1">1시간 (알짜배기)</option>
+                                            <option value="2" selected>2시간 (딱놀기)</option>
+                                            <option value="3">3시간 (여유있게)</option>
+                                            <option value="4">4시간 이상 (뽕뽑기)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block font-bold mb-1">🎯 선호 스타일</label>
+                                        <select id="activityTypeSelect" class="w-full px-1.5 py-1.5 border-2 border-purple-400 text-xs bg-white text-black">
+                                            <option value="chill">휴식/카페/수다</option>
+                                            <option value="active">활동적/보드게임/노래방</option>
+                                            <option value="foodie">맛집/디저트 탐방</option>
+                                            <option value="mixed" selected>골고루 섞어서</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Pixel Button -->
+                            <button type="submit" class="pixel-btn w-full py-2.5 font-bold text-sm">
+                                ⚡ AI 땃쥐야 중간 지점 & 코스 계산해줘! ⚡
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Rage Level Meter Window -->
+                <div class="pixel-window p-3">
+                    <div class="flex justify-between items-center mb-1.5 text-xs">
+                        <span class="font-bold">땃쥐 분노 상태 게이지 ⚡</span>
+                        <span id="angerLevelText" class="px-2 py-0.5 bg-purple-200 text-purple-900 border border-purple-500 font-bold">단계 1: 평화로움</span>
+                    </div>
+                    <div class="pixel-inset h-4 p-0.5 bg-gray-200">
+                        <div id="angerBar" class="h-full bg-gradient-to-r from-green-400 via-yellow-300 to-red-500 transition-all duration-300" style="width: 10%;"></div>
+                    </div>
+                    <div class="flex justify-between text-[11px] opacity-80 mt-1">
+                        <span>수정 요청: <span id="changeCount" class="font-bold text-pink-600">0</span>회</span>
+                        <span>경고: 5회 수정 시 대폭발</span>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- Right Column: Mascot Status & Pixel Itinerary -->
+            <section class="lg:col-span-7 flex flex-col gap-4">
+                
+                <!-- Buddy Buddy Messenger Mascot Chat Box -->
+                <div id="mascotCard" class="pixel-window p-3.5 transition-all duration-200">
+                    <div class="flex items-center gap-3">
+                        <div id="mascotFace" class="w-16 h-16 bg-pink-100 border-2 border-purple-800 flex items-center justify-center text-3xl shadow-inner select-none shrink-0 text-black">
+                            ₍ᐢ. ̫ .ᐢ₎
+                        </div>
+                        <div class="flex-1 pixel-inset p-3 relative">
+                            <div class="text-[11px] font-bold border-b border-purple-200 pb-0.5 mb-1 flex justify-between opacity-80">
+                                <span>[땃지니 AI 메신저]</span>
+                                <span>버디버디 대화창</span>
+                            </div>
+                            <div id="mascotSpeech" class="text-xs leading-relaxed font-bold">
+                                "친구들 출발지랑 MBTI 알려주면 제일 빠른 중간지점이랑 꿀잼 코스를 바로 정해준다쮜!"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cyworld Minihompy Itinerary Board Window -->
+                <div class="pixel-window flex-1 flex flex-col justify-between min-h-[420px]">
+                    <div class="pixel-titlebar">
+                        <span class="text-xs font-bold flex items-center gap-1.5">
+                            <i class="fa-solid fa-map text-yellow-300"></i>
+                            <span id="scheduleTitle">추천 약속 스케줄 미니홈피</span>
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <span id="midpointBadge" class="hidden text-[11px] bg-yellow-200 text-purple-950 px-2 py-0.5 border border-purple-800 font-bold">
+                                📍 중간지점: 계산중...
+                            </span>
+                            <button id="copyBtn" onclick="copyScheduleToClipboard()" class="hidden pixel-btn text-[11px] px-2 py-0.5 bg-yellow-300 font-bold text-black border border-black hover:bg-yellow-400">
+                                📋 스케줄 복사
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-3 flex-1 flex flex-col justify-between">
+                        <!-- Dynamic Schedule List -->
+                        <div id="scheduleTimeline" class="space-y-2.5 text-xs">
+                            <div class="text-center py-20 opacity-60">
+                                <div class="text-3xl mb-2">📟</div>
+                                👈 왼쪽에서 친구 정보와 출발지를 입력하고<br>AI 땃쥐에게 코스를 부탁해보라쮜!
+                            </div>
+                        </div>
+
+                        <!-- Course Revision Input Box -->
+                        <div id="modifySection" class="hidden mt-4 pt-3 border-t-2 border-purple-300">
+                            <label class="block text-xs font-bold mb-1">
+                                💬 코스 수정 요청하기 (땃쥐 갈구기)
+                            </label>
+                            <div class="flex gap-1.5">
+                                <input type="text" id="modifyInput" placeholder="예: 보드게임장 가자, 노래방 추가, 1시간으로 줄여줘" 
+                                    class="flex-1 px-2 py-1.5 border-2 border-purple-400 text-xs focus:outline-none focus:bg-yellow-50 text-black">
+                                <button onclick="requestModification()" class="pixel-btn px-3 py-1.5 font-bold text-xs whitespace-nowrap">
+                                    코스 재구성 ⚡
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- Retro Dial-up AI Loading Window -->
+    <div id="aiLoadingOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
+        <div class="pixel-window max-w-sm w-full p-4 text-center">
+            <div class="pixel-titlebar mb-3">
+                <span class="text-xs font-bold">Dial-up Modem Connecting...</span>
+            </div>
+            <div class="my-4">
+                <div class="text-4xl animate-bounce mb-2">₍ᐢ. ̫ .ᐢ₎🌀</div>
+                <p id="loadingMessage" class="text-xs font-bold mb-3">
+                    "모뎀 연결 중이다쮜... 최적 코스 계산 중!"
+                </p>
+                <div class="pixel-inset h-4 bg-gray-200 p-0.5">
+                    <div id="loadingBar" class="h-full bg-purple-600 transition-all duration-300" style="width: 10%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Retro Error Dialog Popup -->
+    <div id="errorModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <div class="pixel-window max-w-xs w-full">
+            <div class="bg-red-600 text-white text-xs p-1 px-2 flex justify-between items-center font-bold">
+                <span>⚠️ SYSTEM ERROR</span>
+                <button onclick="closeErrorModal()" class="text-white">✕</button>
+            </div>
+            <div class="p-4 bg-white text-center text-xs space-y-3 text-black">
+                <div class="text-2xl">🚨</div>
+                <div class="font-bold text-red-600" id="errorMessageText">
+                    [정보가 잘못됐다쮜!]
+                </div>
+                <p class="text-gray-700 text-[11px]">
+                    참여자 중 올바른 MBTI 4글자(예: ENFP, ISTJ)를 안 적은 친구가 있다쮜!
+    <!-- Copy Notification Toast Popup -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 hidden pixel-window p-3 bg-yellow-200 border-2 border-black shadow-lg">
+        <div class="flex items-center gap-2 text-xs font-bold text-black">
+            <span>📋</span>
+            <span id="toastMessage">[약속 스케줄 클립보드 복사 완료쮜!]</span>
+        </div>
+    </div>
+
+    <script>
+        // Theme Changer Logic
+        function setTheme(themeName) {
+            document.body.className = document.body.className.replace(/theme-\w+/g, '');
+            if (themeName !== 'lavender') {
+                document.body.classList.add(`theme-${themeName}`);
+            }
+        }
+
+        // Web Audio API 8-Bit Pixel Squeak SFX (Triggers strictly on click)
+        let audioCtx = null;
+
+        function playPixelSqueakSFX(isRage = false) {
+            try {
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+
+                osc.type = isRage ? 'sawtooth' : 'square';
+                
+                if (isRage) {
+                    osc.frequency.setValueAtTime(400, now);
+                    osc.frequency.linearRampToValueAtTime(150, now + 0.15);
+                    gain.gain.setValueAtTime(0.25, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.15);
+                } else {
+                    // Cute 8-bit retro chirping squeak
+                    osc.frequency.setValueAtTime(1800, now);
+                    osc.frequency.setValueAtTime(2600, now + 0.04);
+                    osc.frequency.setValueAtTime(3200, now + 0.08);
+
+                    gain.gain.setValueAtTime(0.1, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+                }
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.15);
+            } catch(e) {
+                // Audio fallback
+            }
+        }
+
+        // Play click sound on user interactions
+        window.addEventListener('click', () => {
+            playPixelSqueakSFX(modificationCount >= 5);
+        });
+
+        // Pixel Sparkle Cursor Effect
+        const canvas = document.getElementById('sparkleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            if (Math.random() < 0.4) {
+                particles.push({
+                    x: Math.floor(e.clientX / 2) * 2,
+                    y: Math.floor(e.clientY / 2) * 2,
+                    size: 3,
+                    color: ['#ffb3d9', '#a4d8ff', '#fff199', '#b3f5e6'][Math.floor(Math.random() * 4)],
+                    life: 1
+                });
+            }
+        });
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.life -= 0.05;
+                if (p.life <= 0) {
+                    particles.splice(i, 1);
+                    continue;
+                }
+                ctx.fillStyle = p.color;
+                ctx.globalAlpha = p.life;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Application State Variables
+        let participantCount = 0;
+        let modificationCount = 0;
+        let currentSchedule = [];
+        let chosenMidpoint = "";
+
+        const mbtiRegex = /[EI][NS][TF][PJ]/i;
+
+        // Anger Tier Configuration
+        const angerTiers = {
+            1: {
+                face: "₍ᐢ. ̫ .ᐢ₎",
+                speech: "오케이쮜! 최적 중간지점이랑 맞춤 스케줄이 도착했다쮜! 마음에 드냐쮜?",
+                badge: "단계 1: 평화로움",
+                barColor: "width: 20%; background: #4ade80;"
+            },
+            2: {
+                face: "(• ε •)",
+                speech: "음... 코스를 살짝 수정했다쮜. 이번엔 진짜 괜찮을 거다쮜!",
+                badge: "단계 2: 갸우뚱쮜",
+                barColor: "width: 40%; background: #facc15;"
+            },
+            3: {
+                face: "( •̀ ᴖ •́ )",
+                speech: "또 바꾸냐쮜...? 쥐 사전에 인내심이란 없다쮜... 일단 또 고쳐줬다쮜!",
+                badge: "단계 3: 심기 불편",
+                barColor: "width: 60%; background: #fb923c;"
+            },
+            4: {
+                face: "( ◣_◢ )쮜!",
+                speech: "야!! 자꾸 수정할래쮜?! 땃쥐 머리 터진다쮜!! 마지막 경고다쮜!!",
+                badge: "단계 4: 일촉즉발⚡",
+                barColor: "width: 80%; background: #f87171;"
+            },
+            5: {
+                face: "(╬ ◣ 皿 ◢ )쮜!!!",
+                speech: "🤬 삐---! 그만좀 바꿔라 이 삐---야!! 땃쥐 대폭발했다쮜💥💥💥! 네가 직접 짜라쮜!!!!",
+                badge: "단계 5: 극대노 폭발🔥🔥",
+                barColor: "width: 100%; background: #ff3344;"
+            }
+        };
+
+        // Initialize default participants
+        window.onload = function() {
+            addParticipant("나 (참여자 1)");
+            addParticipant("친구 (참여자 2)");
+
+            // Live Clock
+            setInterval(() => {
+                const now = new Date();
+                document.getElementById('currentTimeDisplay').textContent = now.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+            }, 1000);
+        };
+
+        function addParticipant(defaultLabel = null) {
+            participantCount++;
+            const container = document.getElementById('participantsContainer');
+            
+            const card = document.createElement('div');
+            card.className = "pixel-inset p-2.5 space-y-1.5 text-xs text-black";
+            card.id = `participant_${participantCount}`;
+
+            const titleLabel = defaultLabel || `참여자 ${participantCount}`;
+
+            card.innerHTML = `
+                <div class="flex justify-between items-center border-b border-purple-200 pb-1">
+                    <span class="font-bold text-purple-900">👤 ${titleLabel}</span>
+                    ${participantCount > 2 ? `<button type="button" onclick="removeParticipant(${participantCount})" class="text-red-500 font-bold">✕ 삭제</button>` : ''}
+                </div>
+                <div class="grid grid-cols-2 gap-1.5">
+                    <input type="text" placeholder="출발위치 (예: 강남역)" class="part-loc px-1.5 py-1 border border-purple-300 text-xs focus:outline-none focus:bg-yellow-50" required>
+                    <input type="text" placeholder="MBTI (예: ENFP)" class="part-mbti px-1.5 py-1 border border-purple-300 text-xs font-bold uppercase focus:outline-none focus:bg-yellow-50" maxlength="4" required>
+                </div>
+                <input type="text" placeholder="선호/취향 (예: 맛집 선호, 조용한 곳)" class="part-narrative w-full px-1.5 py-1 border border-purple-300 text-xs focus:outline-none focus:bg-yellow-50" required>
+            `;
+
+            container.appendChild(card);
+        }
+
+        function removeParticipant(id) {
+            const card = document.getElementById(`participant_${id}`);
+            if (card) {
+                card.remove();
+            }
+        }
+
+        function calculateSmartMidpoint(locations) {
+            const hubs = ["홍대입구역", "강남역", "성수역", "신촌역", "종로3가역", "사당역", "건대입구역", "잠실역", "혜화역"];
+            return hubs[Math.floor(Math.random() * hubs.length)];
+        }
+
+        function generateInitialSchedule(e) {
+            e.preventDefault();
+
+            const locInputs = document.querySelectorAll('.part-loc');
+            const mbtiInputs = document.querySelectorAll('.part-mbti');
+            const narrativeInputs = document.querySelectorAll('.part-narrative');
+
+            const locations = [];
+            const mbtis = [];
+            let invalidMbtiFound = false;
+
+            mbtiInputs.forEach((input, index) => {
+                const val = input.value.trim();
+                const narrativeVal = narrativeInputs[index].value.trim();
+
+                if (!mbtiRegex.test(val) && !mbtiRegex.test(narrativeVal)) {
+                    invalidMbtiFound = true;
+                } else {
+                    const match = val.match(mbtiRegex) || narrativeVal.match(mbtiRegex);
+                    if (match) mbtis.push(match[0].toUpperCase());
+                }
+                locations.push(locInputs[index].value.trim());
+            });
+
+            if (invalidMbtiFound) {
+                showErrorModal();
+                return;
+            }
+
+            const targetInput = document.getElementById('targetLocation').value.trim();
+            if (!targetInput || ["미정", "없음", "모름", "추천"].includes(targetInput)) {
+                chosenMidpoint = calculateSmartMidpoint(locations);
+            } else {
+                chosenMidpoint = targetInput;
+            }
+
+            const freeTime = document.getElementById('freeTimeSelect').value;
+            const activityType = document.getElementById('activityTypeSelect').value;
+
+            modificationCount = 1;
+
+            showLoader(`${locations.length}명의 출발지와 MBTI(${mbtis.join(', ')})를 종합 분석 중이다쮜...`);
+
+            setTimeout(() => {
+                hideLoader();
+
+                buildSchedule(freeTime, activityType, mbtis);
+                renderSchedule();
+                updateAngerUI(1);
+
+                const badge = document.getElementById('midpointBadge');
+                badge.textContent = `📍 추천 장소: ${chosenMidpoint}`;
+                badge.classList.remove('hidden');
+
+                document.getElementById('copyBtn').classList.remove('hidden');
+                document.getElementById('modifySection').classList.remove('hidden');
+            }, 1200);
+        }
+
+        // Copy Schedule to Clipboard System
+        function copyScheduleToClipboard() {
+            if (!currentSchedule || currentSchedule.length === 0) return;
+
+            let textToCopy = `[약속땃지ni : 땃쥐가 정해준 약속 스케줄쮜!]\n`;
+            textToCopy += `📍 중간지점: ${chosenMidpoint}\n`;
+            textToCopy += `------------------------------------\n`;
+
+            currentSchedule.forEach((item, index) => {
+                textToCopy += `${index + 1}. [${item.time}] ${item.title}\n   - ${item.desc}\n`;
+            });
+
+            textToCopy += `------------------------------------\n`;
+            textToCopy += `땃쥐 플래너에서 더 수정하기 ₍ᐢ. ̫ .ᐢ₎쮜!`;
+
+            // Clipboard write attempt with fallback
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showToast("[약속 스케줄 클립보드 복사 완료쮜!]");
+                }).catch(() => {
+                    fallbackCopyText(textToCopy);
+                });
+            } else {
+                fallbackCopyText(textToCopy);
+            }
+        }
+
+        function fallbackCopyText(text) {
+            const textarea = document.createElement("textarea");
+            textarea.value = text;
+            textarea.style.position = "fixed";
+            textarea.style.opacity = "0";
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            try {
+                document.execCommand('copy');
+                showToast("[약속 스케줄 클립보드 복사 완료쮜!]");
+            } catch (err) {
+                alert("복사에 실패했다쮜! 직접 텍스트를 선택해서 복사해달라쮜!");
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toastNotification');
+            document.getElementById('toastMessage').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2000);
+        }
+
+        function buildSchedule(hours, type, mbtis) {
+            const h = parseInt(hours);
+            currentSchedule = [];
+
+            currentSchedule.push({
+                time: "12:30 PM",
+                title: `${chosenMidpoint} 시그니처 픽셀 맛집`,
+                desc: `[${mbtis.join('&')} 맞춤] 취향 공통분모를 저격한 실패 없는 런치 코스!`,
+                icon: "fa-utensils"
+            });
+
+            if (h >= 1) {
+                currentSchedule.push({
+                    time: "01:30 PM",
+                    title: `레트로 감성 디저트 카페`,
+                    desc: `[1시간 알짜배기] 수다 떨면서 아늑하게 쉬어가는 시간쮜!`,
+                    icon: "fa-mug-hot"
+                });
+            }
+
+            if (h >= 2) {
+                currentSchedule.push({
+                    time: "02:30 PM",
+                    title: `${chosenMidpoint} 소품샵 & 포토부스`,
+                    desc: `네컷사진 찍고 귀여운 레트로 굿즈 구경하기!`,
+                    icon: "fa-camera"
+                });
+            }
+
+            if (h >= 3) {
+                currentSchedule.push({
+                    time: "03:30 PM",
+                    title: `체험형 놀이 (보드게임 or 코노)`,
+                    desc: `게임 한판 하면서 텐션 제대로 올리기!`,
+                    icon: "fa-gamepad"
+                });
+            }
+
+            if (h >= 4) {
+                currentSchedule.push({
+                    time: "05:00 PM",
+                    title: `분위기 있는 다이닝 라운지`,
+                    desc: `하루를 완벽하게 마무리하는 감성 디너 코스!`,
+                    icon: "fa-wine-glass"
+                });
+            }
+        }
+
+        function requestModification() {
+            const input = document.getElementById('modifyInput');
+            const reqText = input.value.trim();
+
+            if (!reqText) {
+                alert("수정하고 싶은 내용을 입력하라쮜!");
+                return;
+            }
+
+            modificationCount++;
+            const tier = Math.min(modificationCount, 5);
+
+            showLoader(`"${reqText}" 요청 반영 중... 모뎀 재연결 중이다쮜!`);
+
+            setTimeout(() => {
+                hideLoader();
+
+                parseAndApplyModification(reqText);
+                renderSchedule();
+                updateAngerUI(tier);
+
+                input.value = "";
+            }, 1000);
+        }
+
+        function parseAndApplyModification(text) {
+            const lower = text.toLowerCase();
+
+            if (lower.includes("보드게임") || lower.includes("게임")) {
+                currentSchedule.splice(2, 0, {
+                    time: "03:00 PM",
+                    title: `${chosenMidpoint} 레트로 보드게임 카페`,
+                    desc: `[수정반영] 두뇌 풀가동 보드게임 승부 한판!`,
+                    icon: "fa-dice"
+                });
+            } else if (lower.includes("노래방") || lower.includes("코노")) {
+                currentSchedule.push({
+                    time: "06:00 PM",
+                    title: `코인 노래연습장 텐션 폭발`,
+                    desc: `[수정반영] 신나게 노래 부르고 스트레스 싹 해소하기!`,
+                    icon: "fa-microphone"
+                });
+            } else if (lower.includes("1시간")) {
+                currentSchedule = currentSchedule.slice(0, 2);
+            } else {
+                currentSchedule.splice(1, 0, {
+                    time: "02:00 PM",
+                    title: `수정 반영: ${text.substring(0, 10)}`,
+                    desc: `[요청반영] 네가 요구해서 코스에 특별 추가했다쮜!`,
+                    icon: "fa-star"
+                });
+            }
+        }
+
+        function renderSchedule() {
+            const container = document.getElementById('scheduleTimeline');
+            container.innerHTML = "";
+
+            currentSchedule.forEach((item) => {
+                const el = document.createElement('div');
+                el.className = "pixel-inset p-2 flex items-start gap-2.5 text-black bg-white";
+                el.innerHTML = `
+                    <div class="px-2 py-1 bg-purple-200 border border-purple-800 text-purple-950 font-bold text-center shrink-0">
+                        <i class="fa-solid ${item.icon} block text-sm"></i>
+                        <span class="text-[10px]">${item.time}</span>
+                    </div>
+                    <div class="flex-1">
+                        <h4 class="font-bold text-purple-950">${item.title}</h4>
+                        <p class="text-[11px] text-gray-600 mt-0.5">${item.desc}</p>
+                    </div>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        function updateAngerUI(tier) {
+            const config = angerTiers[tier];
+
+            document.getElementById('mascotFace').textContent = config.face;
+            document.getElementById('mascotSpeech').textContent = config.speech;
+            document.getElementById('angerLevelText').textContent = config.badge;
+            document.getElementById('changeCount').textContent = modificationCount;
+
+            const bar = document.getElementById('angerBar');
+            bar.style = config.barColor;
+
+            if (tier >= 5) {
+                document.body.classList.add('rage-mode');
+                document.getElementById('mascotCard').classList.add('bg-red-200', 'border-red-600');
+            } else {
+                document.body.classList.remove('rage-mode');
+                document.getElementById('mascotCard').classList.remove('bg-red-200', 'border-red-600');
+            }
+        }
+
+        function showErrorModal() {
+            document.getElementById('errorModal').classList.remove('hidden');
+        }
+
+        function closeErrorModal() {
+            document.getElementById('errorModal').classList.add('hidden');
+        }
+
+        function showLoader(msg) {
+            document.getElementById('loadingMessage').textContent = msg;
+            const overlay = document.getElementById('aiLoadingOverlay');
+            overlay.classList.remove('hidden');
+            overlay.classList.add('flex');
+
+            let bar = document.getElementById('loadingBar');
+            bar.style.width = '10%';
+            setTimeout(() => bar.style.width = '60%', 300);
+            setTimeout(() => bar.style.width = '95%', 800);
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('aiLoadingOverlay');
+            overlay.classList.add('hidden');
+            overlay.classList.remove('flex');
+        }
+    </script>
+</body>
+</html>
